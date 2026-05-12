@@ -1,0 +1,134 @@
+########################################################################################################################
+# Repo tool base settings
+########################################################################################################################
+
+[repo]
+
+# Use the Kit Template repo configuration as a base. Only override things specific to the repo.
+import_configs = [
+    "${root}/_repo/deps/repo_kit_tools/kit-template/repo.toml",
+    "${root}/_repo/deps/repo_kit_tools/kit-template/repo-external-app.toml",
+]
+
+# Repository name
+name = "cable.sim"
+
+
+[repo_build]
+# Ensure source/apps directory exists.
+fetch."platform:linux-x86_64".before_pull_commands = [
+    ["mkdir", "--parents", "${root}/source/apps"],
+]
+
+fetch."platform:windows-x86_64".before_pull_commands = [
+    ["powershell", "-Command", "New-Item -ItemType Directory -Path ${root}/source/apps -ErrorAction SilentlyContinue", ";", "Write-Host 'Done'"],
+]
+
+# When caching, do not try to cache extensions (NGC registry).
+fetch."token:cache==true".after_pull_commands = []
+
+
+[repo_build.build]
+enabled = true
+"platform:windows-x86_64".enabled = false
+
+
+# Disable linbuild until a public image is available.
+[repo_build.docker]
+enabled = false
+
+[repo_build.fetch.pip]
+files_to_pull = [
+    "${root}/tools/deps/pip.toml",
+]
+
+# Don't gather Python dependency licenses.
+licensing_enabled = false
+
+# Don't publish a pip cache.
+publish_pip_cache = false
+
+########################################################################################################################
+# Extensions precacher
+########################################################################################################################
+
+[repo_precache_exts]
+apps = []
+
+registries = [
+    { name = "kit/default", url = "https://ovextensionsprod.blob.core.windows.net/exts/kit/prod/${kit_version_major}/shared" },
+    { name = "kit/sdk", url = "https://ovextensionsprod.blob.core.windows.net/exts/kit/prod/sdk/${kit_version_short}/${kit_git_hash}" },
+    { name = "kit/community", url = "https://dw290v42wisod.cloudfront.net/exts/kit/community" },
+]
+
+generated_app_path = "${root}/_build/apps/exts.deps.generated.kit"
+
+
+########################################################################################################################
+# Packaging
+########################################################################################################################
+
+[repo_package.packages.fat_package]
+root = "_build/$${platform}/$${config}"
+archive_name = "${conf:repo.name}-fat"
+omniverse_flow_version_scheme = true
+package_per_config = true
+append_config = true
+archive_format = "zip"
+windows_max_path_length = 0
+
+files = [
+    ["**"],
+]
+files_exclude = [
+    ["_*/**"],
+    [".*/**"],
+    ["**/*.pdb"],
+    ["**/*.exp"],
+    ["baseapp/**"],
+    ["extsbuild/**"],
+    ["cache/**"],
+    ["data/**"],
+    ["logs/**"],
+    ["apps/kit.portable"],
+    ["**/__pycache__"],
+    ["**/_repo/**"],
+]
+"linux-x86_64".files_strip = []
+
+
+[repo_package.packages.thin_package]
+root = "_build/$${platform}/$${config}"
+archive_name = "${conf:repo.name}-thin"
+omniverse_flow_version_scheme = true
+package_per_config = true
+append_config = true
+archive_format = "zip"
+windows_max_path_length = 0
+
+files = [
+    ["**"],
+]
+files_exclude = [
+    ["_*/**"],
+    [".*/**"],
+    ["**/*.pdb"],
+    ["**/*.exp"],
+    ["kit/**"],
+    ["extscache/**"],
+    ["extsbuild/**"],
+    ["baseapp/**"],
+    ["cache/**"],
+    ["data/**"],
+    ["logs/**"],
+    ["apps/kit.portable"],
+    ["**/__pycache__"],
+    ["**/_repo/**"],
+]
+"linux-x86_64".files_strip = []
+
+
+[repo_publish_exts]
+signing.enabled = false
+use_packman_to_upload_archive = false
+exts.include = ["cable.sim"]

@@ -1,0 +1,5 @@
+# Normalize text files on commit to LF endings by default
+* text=auto
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.sh text eol=lf

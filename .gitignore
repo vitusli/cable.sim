@@ -1,0 +1,36 @@
+# All folders starting with _ are local (build, deps, repo bootstrap, etc.)
+_*/
+
+# Compiled python
+*.py[cod]
+__pycache__/
+
+# Editor
+/.vs
+/.idea/
+**/.vscode/ipch
+.vscode/settings.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated license file
+PACKAGE-DEPS.yaml
+
+# Packman
+*.packman.xml.user
+
+# Kit user config
+deps/**/user.toml
+
+# Linux build $HOME dirs
+/.nvidia-omniverse
+/.local
+/.cache
+
+# Omniverse EULA
+/.omniverse_eula_accepted.txt
+
+# Streaming EventTrace
+*.etli
