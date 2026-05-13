@@ -6,10 +6,6 @@ import carb
 import omni.kit.commands
 import omni.usd
 
-from ..core.spec import CableSpec
-from ..builder.cable_builder import build_cable
-
-
 class CreateCableCommand(omni.kit.commands.Command):
     """Create a volume-deformable cable.
 
@@ -21,15 +17,19 @@ class CreateCableCommand(omni.kit.commands.Command):
         spec: A CableSpec instance (or dict of CableSpec fields).
     """
 
-    def __init__(self, spec: CableSpec | dict | None = None, **kwargs):
+    def __init__(self, spec=None, **kwargs):
+        from ..core.spec import CableSpec
+
         if spec is None:
             spec = CableSpec(**kwargs)
         elif isinstance(spec, dict):
             spec = CableSpec(**{**spec, **kwargs})
-        self._spec: CableSpec = spec
+        self._spec = spec
         self._created_path: str = ""
 
     def do(self) -> str:
+        from ..builder.cable_builder import build_cable
+
         self._created_path = build_cable(self._spec)
         return self._created_path
 

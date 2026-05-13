@@ -11,7 +11,9 @@ repository = ""
 
 [dependencies]
 "omni.usd" = {}
+"omni.ui" = {}
 "omni.kit.commands" = {}
+"omni.kit.menu.utils" = {}
 "omni.physx" = {}
 "omni.physx.commands" = {}
 
