@@ -27,6 +27,7 @@ def create_volume_deformable(
     self_collision: bool,
     self_collision_filter_distance: float,
     solver_position_iteration_count: int,
+    linear_damping: float,
     contact_offset: float,
     rest_offset: float,
     hex_resolution: int,
@@ -95,6 +96,12 @@ def create_volume_deformable(
         "physxDeformableBody:solverPositionIterationCount",
         Sdf.ValueTypeNames.UInt,
         int(solver_position_iteration_count),
+    )
+    set_prim_attribute(
+        root_prim,
+        "physxDeformableBody:linearDamping",
+        Sdf.ValueTypeNames.Float,
+        float(linear_damping),
     )
 
     # Contact / rest offsets on the collision mesh

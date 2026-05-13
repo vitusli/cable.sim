@@ -34,6 +34,7 @@ class CableSpec:
     solver_position_iteration_count: int = CABLE_DEFAULTS[
         "solver_position_iteration_count"
     ]
+    linear_damping: float = CABLE_DEFAULTS["linear_damping"]
 
     # Collision mesh offsets
     contact_offset: float = CABLE_DEFAULTS["contact_offset"]

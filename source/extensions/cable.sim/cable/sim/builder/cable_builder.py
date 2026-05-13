@@ -102,6 +102,7 @@ def build_cable(spec: CableSpec, stage: Usd.Stage | None = None) -> str:
         self_collision=spec.self_collision,
         self_collision_filter_distance=spec.self_collision_filter_distance,
         solver_position_iteration_count=spec.solver_position_iteration_count,
+        linear_damping=spec.linear_damping,
         contact_offset=spec.contact_offset,
         rest_offset=spec.rest_offset,
         hex_resolution=min(spec.ring_count, 100),

@@ -14,7 +14,8 @@ CABLE_DEFAULTS = {
     "mass": 4.0,
     "self_collision": True,
     "self_collision_filter_distance": 0.005,
-    "solver_position_iteration_count": 32,
+    "solver_position_iteration_count": 64,
+    "linear_damping": 10.0,
 
     # Collision mesh offsets
     "contact_offset": 0.004,
