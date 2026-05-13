@@ -126,9 +126,6 @@ class CableSimWindow(ui.Window):
             # Material
             density=m["density"].get_value_as_float(),
             youngs_modulus=m["youngs_modulus"].get_value_as_float(),
-            poissons_ratio=m["poissons_ratio"].get_value_as_float(),
-            dynamic_friction=m["dynamic_friction"].get_value_as_float(),
-            static_friction=m["static_friction"].get_value_as_float(),
             # Anchors
             anchor_size=m["anchor_size"].get_value_as_float(),
             create_start_anchor=m["create_start_anchor"].get_value_as_bool(),
@@ -194,9 +191,6 @@ class CableSimWindow(ui.Window):
                     m["youngs_modulus"] = _float_field(
                         "Young's Modulus", d["youngs_modulus"], "Young's modulus in Pa", fmt="%.1e"
                     )
-                    m["poissons_ratio"] = _float_field("Poisson's Ratio", d["poissons_ratio"], "Poisson's ratio (0-0.5)")
-                    m["dynamic_friction"] = _float_field("Dynamic Friction", d["dynamic_friction"], "Dynamic friction coefficient")
-                    m["static_friction"] = _float_field("Static Friction", d["static_friction"], "Static friction coefficient")
 
                 _collapsable("Material", _material)
 
