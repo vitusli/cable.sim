@@ -17,8 +17,8 @@ CABLE_DEFAULTS = {
     "solver_position_iteration_count": 32,
 
     # Collision mesh offsets
-    "contact_offset": 0.002,
-    "rest_offset": 0.001,
+    "contact_offset": 0.004,
+    "rest_offset": 0.002,
 
     # Material
     "density": 0.1,
