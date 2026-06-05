@@ -1,11 +1,15 @@
-"""Runtime anchor-distance stretch monitor for cable_stretch.usd.
+r"""Runtime anchor-distance stretch monitor for cable_stretch.usd.
 
 Use in Isaac Sim's Script Editor after opening:
     A:/OneDrive - Wandelbots GmbH/nvidia_omniverse/projects/DAVitus/playground/projekte_sidequests/cable/cable_stretch.usd
 
+Execute in Omniverse / Isaac Sim Script Editor with:
+    exec(compile(open(r"C:\Users\Vitus\dev\cable.sim\scripts\cable_stretch_to_red.py", encoding="utf-8").read(), r"C:\Users\Vitus\dev\cable.sim\scripts\cable_stretch_to_red.py", "exec"))
+
 Run this script, then press Play. The monitor sets the visual material
-/World/Looks/Cable_vis to red once the distance between the cable anchors grows
-too far relative to the distance measured when the monitor starts.
+/World/Looks/Cable_vis to red while the distance between the cable anchors is
+too large relative to the distance measured when the monitor starts. It restores
+the normal color when the stretch drops below the threshold again.
 """
 
 from __future__ import annotations
@@ -112,7 +116,7 @@ class CableStretchMonitor:
         self._set_shader_color(NORMAL_COLOR)
 
     def _on_update(self, _event):
-        if self.triggered or self.failed:
+        if self.failed:
             return
 
         timeline = omni.timeline.get_timeline_interface()
@@ -142,14 +146,24 @@ class CableStretchMonitor:
             self._log_status(distance, relative)
 
             if relative >= CRITICAL_STRETCH:
+                if not self.triggered:
+                    carb.log_warn(
+                        f"[cable stretch] Critical anchor stretch reached: "
+                        f"{relative:.4f} >= {CRITICAL_STRETCH:.4f} "
+                        f"(distance={distance:.6f}, baseline={self.baseline_distance:.6f}). "
+                        "Cable visual material set to red."
+                    )
                 self._set_shader_color(RED)
                 self.triggered = True
-                carb.log_warn(
-                    f"[cable stretch] Critical anchor stretch reached: "
-                    f"{relative:.4f} >= {CRITICAL_STRETCH:.4f} "
-                    f"(distance={distance:.6f}, baseline={self.baseline_distance:.6f}). "
-                    "Cable visual material set to red."
-                )
+            else:
+                if self.triggered:
+                    carb.log_info(
+                        f"[cable stretch] Anchor stretch recovered: "
+                        f"{relative:.4f} < {CRITICAL_STRETCH:.4f}. "
+                        "Cable visual material restored."
+                    )
+                self._set_shader_color(NORMAL_COLOR)
+                self.triggered = False
         except Exception:
             self.failed = True
             carb.log_error("[cable stretch] Monitor failed:\n" + traceback.format_exc())
